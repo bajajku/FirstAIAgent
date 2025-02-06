@@ -96,3 +96,24 @@ def handle_tool_error(state) -> dict:
             for tc in tool_calls  # Iterate over each tool call to produce individual error messages
         ]
     }
+
+'''Step 3: Create a tool node with fallback error handling
+    -> This function will be used to create a tool node with fallback error handling.
+    -> This is a fallback mechanism that will be used to handle errors that occur during tool execution.
+'''
+def create_tool_node_with_fallback(tools: list) -> dict:
+    """
+    Function to create a tool node with fallback error handling.
+    
+    Args:
+        tools (list): A list of tools to be included in the node.
+    
+    Returns:
+        dict: A tool node that uses fallback behavior in case of errors.
+    """
+    # Create a ToolNode with the provided tools and attach a fallback mechanism
+    # If an error occurs, it will invoke the handle_tool_error function to manage the error
+    return ToolNode(tools).with_fallbacks(
+        [RunnableLambda(handle_tool_error)],  # Use a lambda function to wrap the error handler
+        exception_key="error"  # Specify that this fallback is for handling errors
+    )
